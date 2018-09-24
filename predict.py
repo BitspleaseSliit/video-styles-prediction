@@ -1,5 +1,6 @@
 import cv2
 import os
+import os.path
 import numpy as np
 from keras.applications.vgg16 import VGG16
 from keras.preprocessing import image
@@ -25,7 +26,11 @@ model = VGG16(weights='imagenet', include_top=False )
 classifier_path = './models/vgg16_model.h5'
 
 
-
+def deleteImages():
+    for root, dirs, files in os.walk(img_directory):
+        for file in files:
+            os.remove(os.path.join(root, file))
+    
 
 
 def predict(file):
@@ -71,14 +76,15 @@ def videoStyles(file):
             code += 1
         elif temp == 'slide':
             slide += 1
-            
+    
+    deleteImages()  
     head_p = round(((head/img_count)*100),2)
     code_p = round(((code/img_count)*100),2)
     slide_p = round(((slide/img_count)*100),2)
     return head_p,code_p,slide_p
 
 
-head_c,code_c,slide_c = videoStyles('./test3.mp4')
+head_c,code_c,slide_c = videoStyles('./test2.mp4')
 print('Talkin Head: '+str(head_c))
 print('Code: '+str(code_c))
 print('Slide: '+str(slide_c))
